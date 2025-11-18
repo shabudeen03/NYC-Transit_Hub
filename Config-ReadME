@@ -1,22 +1,20 @@
 Development Environment:
 	Frontend: React.js w/ CSS
-	Backend: Python + Flask + SQLite
+	Backend: Express/Node
 	Version Control: Git + GitHub
 	Deployment: TBD
-	Testing: Jest (for React), Pytest (for Flask)
+	Testing: TBD
 
 Configurating the Environment:
 	1. Install Prerequisites
 		Node.js
-		Python 
 		Git
 	2. Fetch the repository (after you accept contribution invitation)
 	3. Setup Backend
 		mkdir backend (already done by me)
 		cd backend (already done by me)
-		python -m venv venv
-		source venv/Scripts/activate
-		pip install flask flask-cors sqlalchemy
+		npm init (press enter until the command is completed)
+        npm install express
 	4. Setup Frontend
 		npm create vite@latest frontend -- --template react
 		cd frontend
@@ -24,23 +22,18 @@ Configurating the Environment:
 	5. Add testing
 		Frontend: 
 			npm install --save-dev jest @testing-library/react @testing-library/jest-dom
-		Backend: 
-			pip install pytest
-			touch test_app.py
+		Backend: TBD
 
 Running the Application
 	Open 2 terminals (one for backend, the other for frontend and navigate on both to the respective directories)
-	Backend: 
-		1. source venv/Scripts/activate
-		2. run either: flask run OR python app.py
-		On your browser, going to this site: "http://127.0.0.1:5000/api/hello" should give a JSON 
+	Backend: node app.js 
 
 	Frontend: npm run dev
 		On your browser, going to this site: "http://localhost:5173/" should now show the message as a string
 
 Running the tests
 	Frontend: npm test
-	Backend: pytest
+	Backend: TBD
 
 GitHub USEFUL
 	1. Get updates from remote branch to your local branch
