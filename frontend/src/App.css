@@ -1,3 +1,55 @@
+@import "leaflet/dist/leaflet.css";
+
+.main-container {
+  display: flex;
+}
+
+/* Ensures leaflet map tiles load correctly */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* Center the map on the screen */
+.map-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 50%;
+  height: 70vh; /* take up most of the screen */
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* The actual map size */
+.map {
+  height: 80vh;
+  width: 90%;
+  margin: 0 auto;
+  border: 10px solid #ccc;
+
+  /* max-width: 900px;
+  max-height: 700px; */
+
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.dashboard-container {
+  max-height: 600px;   /* adjust */
+  max-width: 50vh;    /* adjust */
+  overflow-y: auto;
+  overflow-x: auto;
+  border: 1px solid #ccc;
+  padding: 1rem;
+}
+
+
+
+/* Existing CSS - dont delete below */
+/* 
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -39,4 +91,4 @@
 
 .read-the-docs {
   color: #888;
-}
+} */

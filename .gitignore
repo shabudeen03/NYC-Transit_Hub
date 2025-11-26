@@ -8,16 +8,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Backend
-backend/venv/
-__pycache__/
-*.pyc
 backend/.env
-
-# IDE / OS
-.vscode/
-.DS_Store
-Thumbs.db
-
-# Logs / temporary
-*.log
-*.tmp
+backend/node_modules/
+backend/logs/
+backend/*.log

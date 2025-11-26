@@ -1,16 +1,23 @@
-import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AuthProvider from "./context/AuthContext";
+import Header from "./components/Header";
+
+import AuthPage from "./pages/AuthPage";
+import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
-  const [data, setData] = useState("");
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/hello")
-      .then(res => res.json())
-      .then(data => setData(data.message));
-  }, []);
-
   return (
-    <h1>{data}</h1>
+    <BrowserRouter>
+      <AuthProvider>
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
