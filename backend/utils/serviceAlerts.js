@@ -112,19 +112,19 @@ async function getFormattedSubwayAlerts() {
 
 async function getSubwayAlerts() {
   //check Redis first
-  console.log("Checking Cache first");
+  console.log("Checking Alert Cache first");
   const cachedFeed = cache.getCache(CACHE_KEY);
   if(cachedFeed) {
-    console.log("Retrieving from Cache");
+    console.log("Retrieving cached alerts");
     return cachedFeed;
   }
 
   //otherwise fetch and cache w/ redis
-  console.log("Fetching service alert feeds");
+  console.log("Fetching new service alerts");
   const feed = await getFormattedSubwayAlerts();
   
   //save in cache
-  console.log("Caching service alerts");
+  console.log("Caching new service alerts");
   cache.setCache(CACHE_KEY, feed, CACHE_TTL);
   return feed;
 }

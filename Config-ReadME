@@ -1,47 +1,35 @@
 Development Environment:
-	Frontend: React.js w/ CSS
+	Frontend: React.js
 	Backend: Express/Node
 	Version Control: Git + GitHub
 	Deployment: TBD
 	Testing: TBD
 
 Configurating the Environment:
-	1. Install Prerequisites
-		Node.js
-		Git
-	2. Fetch the repository (after you accept contribution invitation)
+	1. Install Prerequisites - Nodejs & npm, git
+	2. Fetch the repository
+			"git clone <repo_url>"
 	3. Setup Backend
-		mkdir backend (already done by me)
-		cd backend (already done by me)
-		npm init (press enter until the command is completed)
-        npm install express cors axios dotenv nodemon gtfs-realtime-bindings gtfs bcrypt jsonwebtoken mongoose  unzipper csv-parse
+			"cd backend"
+			"npm install"
 	4. Setup Frontend
-		npm create vite@latest frontend -- --template react
-		cd frontend
-		npm install 
-		npm install axios react-map-gl mapbox-gl
+			"cd frontend"
+			"npm install"
 	5. Add testing
-		Frontend: 
-			npm install --save-dev jest @testing-library/react @testing-library/jest-dom
-		Backend: TBD
+		TBD
 
 Running the Application
-	Open 2 terminals (one for backend, the other for frontend and navigate on both to the respective directories)
-	Backend: node app.js 
+	Open 2 terminals
 
-	Frontend: npm run dev
-		On your browser, going to this site: "http://localhost:5173/" should now show the message as a string
+	Terminal 1: 
+		cd backend
+		nodemon server.js # Use node server.js if nodemon does not work
+
+	Terminal 2:
+		cd frontend
+		npm run dev
+
+	On browser, navigate to: "http://localhost:5173"
 
 Running the tests
-	Frontend: npm test
-	Backend: TBD
-
-GitHub USEFUL
-	1. Get updates from remote branch to your local branch
-		git checkout your-branch
-		git pull origin testdev
-	2. Push your local changes to remote branch 
-		git push origin target-branch-to-push
-	3. Push to another remote branch (for example, tested changes to testdev and at the very end to main for submission)
-		git push origin your-branch:main 
-			This pushes changes from your-branch to remote branch main
+	TBD

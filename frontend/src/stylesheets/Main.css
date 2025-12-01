@@ -1,0 +1,260 @@
+/* HomeMapUI.css */
+
+/* Overall layout */
+.home-container {
+  position: relative;
+  width: 100%;
+  /* height: calc(100vh - 60px);  */
+  height: 100vh;
+  overflow: hidden;
+}
+
+.map {
+  /* height: 80vh; */
+  /* width: 90%; */
+  /* margin: auto; */
+  /* border: 2px solid #000; */
+  border-radius: 25px;
+  /* overflow: hidden; */
+  /* box-shadow: 0 4px 16px rgba(0,0,0,0.2); */
+}
+
+/* Header */
+.home-header {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%, 0); /* Adjusts for the element's own size */
+  z-index: 3;
+  background-color: white;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Map container */
+.map-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.map-background > * {
+  width: 100%;
+  height: 100%;
+}
+
+.dashboard-fixed-modal {
+  position: absolute;
+  left: 20px;
+  top: 100px;
+  width: 33vw;
+  height: 80vh;
+  background: white;
+  z-index: 4;
+  box-shadow: -4px 0 10px rgba(0,0,0,0.18);
+  padding: 20px;
+  animation: slideInRight 0.25s ease-out;
+  overflow-y: auto;
+  border-radius: 20px;
+}
+
+.dashboard-fixed-modal {
+  direction: rtl;          /* scrollbar moves to the left */
+}
+
+.dashboard-fixed-modal * {
+  direction: ltr;          /* keep text normal */
+}
+
+.abs-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 3;
+}
+
+.styled-check {
+  accent-color: #2563eb;
+}
+
+.home-map {
+  width: 100%;
+  height: 100%;
+  background: #cde0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #444;
+}
+
+.showDashboardBtn {
+  position: absolute;
+  top: 30px;
+  left: 20px;
+  z-index: 3;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: 0.2s ease;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  background: #2563eb;
+  color: white;
+  padding: 10px 16px;
+}
+
+.showDashboardBtn:hover {
+  background: #1d4ed8;
+}
+
+.dashboard-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+
+.dashboard-container {
+  width: 100%;
+}
+
+
+/* Slide‑in animation */
+@keyframes slideInRight {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.map-toggle-controls {
+  position: absolute;
+  top: 100px;
+  right: 10px;
+  z-index: 1000;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+}
+
+.close-btn:hover {
+  color: #000;
+}
+
+/* Inside Leaflet popup */
+.station-popup {
+  font-family: Inter, Arial, sans-serif;
+  padding: 10px 4px;
+  min-width: 180px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  color: #111;
+}
+
+/* Title */
+.popup-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+
+/* Section title */
+.popup-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 4px;
+  color: #1f2937;
+}
+
+/* Text rows */
+.popup-line {
+  font-size: 14px;
+  color: #374151;
+}
+
+/* Train list */
+.popup-list {
+  margin: 4px 0 0 0;
+  padding-left: 18px;
+  font-size: 14px;
+}
+
+.popup-list li {
+  padding: 1px 0;
+}
+
+/* Favorite button container */
+.popup-fav {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  padding: 10px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.leaflet-popup-tip {
+  border-radius: 4px !important;
+}
+
+@media (max-width: 650px) {
+  .showDashboardBtn {
+    position: absolute;
+    top: 95vh;
+    /* bottom: 0; */
+    z-index: 3;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: 0.2s ease;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    background: #2563eb;
+    color: white;
+    /* padding: 10px 16px; */
+    padding: 5px 8px;
+  }
+
+  .dashboard-fixed-modal {
+    font-size: 10px;
+    position: absolute;
+    left: 0;
+    top: 60vh;
+    width: 100%;
+    height: 25vh;
+    margin-bottom: 20px;
+    background: white;
+    z-index: 4;
+    box-shadow: -4px 0 10px rgba(0,0,0,0.18);
+    /* padding: 20px; */
+    /* margin: auto; */
+    animation: slideInRight 0.25s ease-out;
+    overflow-y: auto;
+    border-radius: 20px;
+  }
+}

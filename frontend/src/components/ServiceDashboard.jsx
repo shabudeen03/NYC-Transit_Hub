@@ -2,26 +2,54 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "../App.css";
 
-export default function ServiceDashboard() {
-    const [alerts, setAlerts] = useState([]);
-    const [loading, setLoading] = useState(true);
+export default function ServiceDashboard({ newAlerts }) {
+    const [alerts, setAlerts] = useState(newAlerts);
 
     useEffect(() => {
-        async function load() {
-            try {
-                const res = await axios.get("http://localhost:5000/api/alerts");
-                setAlerts(res.data);
-            } finally {
-                setLoading(false);
-            }
-        }
+      setAlerts(newAlerts);
+    }, [newAlerts]);
+    // const [loading, setLoading] = useState(true);
 
-        load();
-    }, []);
+    // useEffect(() => {
+    //     async function load() {
+    //         try {
+    //             const res = await axios.get("http://localhost:5000/api/train/alerts");
+    //             const cache = localStorage.getItem("routeDataCache");
+    //             const cachedStations = JSON.parse(cache).data.stops;
+                
+    //             // console.log(res.data);
+    //             // console.log(cachedStations);
 
-    if(loading) {
-        return <p>Loading service alerts...</p>;
-    }
+    //             for(const alert of res.data) {
+    //               const affectedStations = alert.affectedStations.map(s => {
+    //                 for(const stop of cachedStations) {
+    //                   if(s.stopId === stop.stop_id + "N" || s.stopId === stop.stop_id + "S") {
+    //                     // console.log(s, stop);
+    //                     return { ...s, name: stop.stop_name, coordinates: [stop.stop_lat, stop.stop_lon] };
+    //                   }
+    //                 }
+
+    //                 return null;
+    //               });
+
+    //               const filtered = affectedStations.filter(s => s);
+
+    //               alert.affectedStations = filtered;  
+    //             }
+
+    //             initializeAlerts(res.data);
+    //             setAlerts(res.data);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     }
+
+    //     load();
+    // }, []);
+
+    // if(loading) {
+    //     return <p>Loading service alerts...</p>;
+    // }
 
     return (
     <div style={{ padding: "20px" }}>
@@ -40,7 +68,9 @@ export default function ServiceDashboard() {
         >
           <h2>{alert.header}</h2>
 
-          {alert.desc && <p>{alert.desc}</p>}
+          {alert.desc && <h4>{alert.desc}</h4>}
+
+          <br />
 
           {alert.affectedRoutes.length > 0 && (
             <>
@@ -63,13 +93,15 @@ export default function ServiceDashboard() {
             </>
             )}
 
+          <br />
+
           {alert.affectedStations.length > 0 && (
             <>
               <h3>Affected Stations:</h3>
               <ul>
                 {alert.affectedStations.map(s => (
-                  <li key={s.stopId}>
-                    {s.name} ({s.stopId})
+                  <li key={crypto.randomUUID()}>
+                    {s.name} ({(s.stopId[s.stopId.length - 1] === 'S') ? 'Southbound platform' : 'Northbound platform'})
                   </li>
                 ))}
               </ul>

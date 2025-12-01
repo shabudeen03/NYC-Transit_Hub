@@ -58,24 +58,45 @@ async function getFile(name) {
     return data;
 }
 
-async function getRoutesForStop(stopId) {
-    const tripIds = db.prepare(`
-        SELECT DISTINCT trip_id
-        FROM stop_times
-        WHERE stop_id = ?
-    `).all(stopId).map(r => r.trip_id);
+async function setStationRouteIds(stops) {
+    const stopMapping = new Map();
+    for(const stop of stops) {
+        if(stop.location_type === '1') {
+            stopMapping.set(stop.stop_id, new Set());
+        } else {
+            const ids = stopMapping.get(stop.parent_station);
+            ids.add(stop.stop_id);
+            stopMapping.set(stop.parent_station, ids);
+        }
+    }
 
-    if (tripIds.length === 0) return [];
+    let ctr = 0;
+    for(const stop of stopMapping.keys()) {
+        ctr++;
+        console.log(stop, stopMapping.get(stop));
+    }
 
-    const placeholders = tripIds.map(() => '?').join(',');
+    console.log(ctr);
+}
 
-    const routes = db.prepare(`
-        SELECT DISTINCT route_id
-        FROM trips
-        WHERE trip_id IN (${placeholders})
-    `).all(...tripIds).map(r => r.route_id);
+async function getRoutesForStopId(stopId) {
+    const query = db.prepare(`
+        SELECT
+            DISTINCT t.route_id
+        FROM 
+            stop_times st
+        JOIN
+            trips t
+        ON
+            st.trip_id = t.trip_id
+        WHERE
+            st.stop_id = ?
+            OR st.stop_id = ?
+    `);
 
-    return routes;
+    const rows = query.all(stopId + "N", stopId + "S");
+    return rows;
+    // console.log(rows);
 }
 
 function insertStopTimes(stopTimesData) {
@@ -135,7 +156,7 @@ function insertTrips(tripsData) {
 // missing: trains at a station
 async function processStationData(stopsData) {
     // const trainStops = [];
-    const query = db.prepare("INSERT INTO stations (stop_id, stop_name, stop_lat, stop_lon, location_type, parent_station, route_ids, accessibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+    const query = db.prepare("INSERT OR IGNORE INTO stations (stop_id, stop_name, stop_lat, stop_lon, location_type, parent_station, route_ids, accessibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
     
     const insertMany = db.transaction((array) => {
         for(const stop of array) {
@@ -158,7 +179,7 @@ async function processStationData(stopsData) {
 
 async function processRoutesData(routesData, tripsData) {
     const trainRoutes = new Map();
-    const trsQuery = db.prepare("INSERT INTO train_shape_routes (route_id, shape_id) VALUES (?, ?);");
+    const trsQuery = db.prepare("INSERT OR IGNORE INTO train_shape_routes (route_id, shape_id) VALUES (?, ?);");
     const insertRouteShapes = db.transaction((rid, shapes) => {
         for(const shape of shapes) {
             // console.log(rid, shape);
@@ -208,7 +229,7 @@ async function processRoutesData(routesData, tripsData) {
     }
 
     // console.log(trainRoutes.get('1').shape_id);
-    const query = db.prepare("INSERT INTO train_routes (route_id, agency_id, short_name, long_name, description, route_type, route_color, route_text_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+    const query = db.prepare("INSERT OR IGNORE INTO train_routes (route_id, agency_id, short_name, long_name, description, route_type, route_color, route_text_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
 
     const insertMany = db.transaction((hashmap) => {
         for(const routeId of hashmap.keys()) {
@@ -245,7 +266,7 @@ async function processShapesData(shapesData) {
         }
     }
 
-    const query = db.prepare("INSERT INTO shapes (shape_id, coordinates) VALUES (?, ?);");
+    const query = db.prepare("INSERT OR IGNORE INTO shapes (shape_id, coordinates) VALUES (?, ?);");
 
     const insertMany = db.transaction((hashmap) => {
         for(const shapeId of hashmap.keys()) {
@@ -3601,8 +3622,8 @@ async function processStaticGTFS() {
     insertTrips(tripsData);
 
     //these files are humungous
-    // const stopTimesData = await getFile("stop_times.txt");
-    // insertStopTimes(stopTimesData); //push to database
+    const stopTimesData = await getFile("stop_times.txt");
+    insertStopTimes(stopTimesData); //push to database
 
     const shapesData = await getFile("shapes.txt");
     
@@ -3617,6 +3638,9 @@ async function processStaticGTFS() {
     //process shape data
     console.log("Processing shape data");
     await processShapesData(shapesData);
+
+    console.log("Setting routes for each station");
+    await setStationRouteIds(stopsData);
 }
 
 async function fetchStaticGTFS() {
@@ -3625,42 +3649,10 @@ async function fetchStaticGTFS() {
     await processStaticGTFS();
 }
 
-//do the same with stations & shapes
-async function insertTrainRoutes(data) {
-    const insertRoute = db.prepare(`
-        INSERT OR REPLACE INTO train_routes (
-            route_id, agency_id, short_name, long_name,
-            description, route_type, route_url,
-            route_color, route_text_color, sort_order,
-            shapes_json
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    const insertOperation = async (obj) => {
-        await insertRoute.run(
-            obj.route_id,
-            obj.agency_id,
-            obj.route_short_name,
-            obj.route_long_name,
-            obj.route_desc,
-            obj.route_type,
-            obj.route_url,
-            obj.route_color,
-            obj.route_text_color,
-            obj.route_sort_order,
-            JSON.stringify(obj.shapes)
-        );
-    };
-
-    for(const pt of data.keys()) {
-        await insertOperation(data.get(pt));
-    }
-}
-
 module.exports = {
     fetchStaticGTFS,
-    getFile
+    getFile,
+    getRoutesForStopId
 };
 
 /*

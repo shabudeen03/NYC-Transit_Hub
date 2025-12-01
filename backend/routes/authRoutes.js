@@ -14,8 +14,10 @@ router.post("/register", async(req, res) => {
     try {
         const hashed = await bcrypt.hash(password, 10);
 
-        const query = db.prepare('INSERT INTO users (username, password) VALUES (?, ?)');
-        const result = query.run(username, hashed);
+        console.log("Auth", username, password, new Date().toDateString());
+
+        const query = db.prepare('INSERT INTO users (username, password, account_created) VALUES (?, ?, ?)');
+        const result = query.run(username, hashed, new Date().toDateString());
 
         req.session.userId = result.lastInsertRowid;
         res.json({
@@ -52,7 +54,8 @@ router.post("/login", async(req, res) => {
         res.json({
             user: {
                 id: row.id,
-                username: row.username
+                username: row.username,
+                account_created: row.account_created
             }
         });
     } catch (err) {
@@ -87,6 +90,7 @@ router.get("/profile", (req, res) => {
     }
 });
 
+//destroy the cookie
 router.post("/logout", (req, res) => {
     req.session.destroy(() => {
         res.json({ message: "Logged out" });

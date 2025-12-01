@@ -1,50 +1,136 @@
-@import "leaflet/dist/leaflet.css";
-
-.main-container {
-  display: flex;
+* {
+  margin: 0;
+  padding: 0;
 }
+
+a {text-decoration: none; }
+
+.default-header {
+  width: 100%;
+  height: 64px;
+  background: #ffffff;
+  color: #111;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border: none;
+  border-radius: 5px;
+}
+
+.logout-btn:hover {
+    background-color: #c82333; /* Darker red on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.logout-btn:active {
+    background-color: #bd2130; /* Even darker red on click */
+    transform: translateY(0); /* Reset lift effect */
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 17px;
+}
+
+/* link styling */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: 17px;
+}
+
+/* links */
+.nav-bar a {
+  color: #1f2937;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.nav-bar a:hover {
+  color: #2563eb;
+}
+
+/* logout button */
+.nav-bar button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.nav-bar button:hover {
+  background: #1d4ed8;
+}
+
+/* @import "leaflet/dist/leaflet.css"; */
+
+/* .main-container {
+  display: flex;
+} */
 
 /* Ensures leaflet map tiles load correctly */
-.leaflet-container {
+/* .leaflet-container {
   width: 100%;
   height: 100%;
-}
+} */
 
 /* Center the map on the screen */
-.map-wrapper {
+/* .map-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
 
   width: 50%;
-  height: 70vh; /* take up most of the screen */
+  height: 70vh; 
   padding: 1rem;
   box-sizing: border-box;
-}
+} */
 
 /* The actual map size */
-.map {
+/* .map {
   height: 80vh;
   width: 90%;
   margin: 0 auto;
   border: 10px solid #ccc;
-
-  /* max-width: 900px;
-  max-height: 700px; */
-
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-}
+} */
 
-.dashboard-container {
-  max-height: 600px;   /* adjust */
-  max-width: 50vh;    /* adjust */
+/* .dashboard-container {
+  max-height: 600px;   
+  max-width: 50vh;    
   overflow-y: auto;
   overflow-x: auto;
   border: 1px solid #ccc;
   padding: 1rem;
-}
+} */
 
 
 

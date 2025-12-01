@@ -1,4 +1,3 @@
-const fs = require('fs');
 const db = require('../database/db');
 
 const createUsers = `
@@ -6,7 +5,8 @@ const createUsers = `
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT UNIQUE,
       password TEXT,
-      favorite_ids TEXT
+      favorite_ids TEXT,
+      account_created TEXT NOT NULL DEFAULT (datetime('now'))
     );
 `;
 

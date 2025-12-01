@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, CircleMarker, Polyline } from "react-leaflet";
+import { useState, useEffect } from "react";
+import { MapContainer, useMap, TileLayer, Marker, Popup, CircleMarker, Polyline } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -20,21 +20,24 @@ L.Icon.Default.mergeOptions({
 import PingMarker from "./UserPing";
 import StationMarker from "./StationMarker";
 
-// Dummy data examples
-const sampleStations = [
-  { stop_id: "101", stop_name: "Van Cortlandt Park", stop_lat: 40.889248, stop_lon: -73.898583 },
-  { stop_id: "102", stop_name: "238 St", stop_lat: 40.881, stop_lon: -73.900 }
-];
+function MoveZoomControl() {
+  const map = useMap();
 
-const sampleLines = [
-  { shape_id: "A", list: [[40.889, -73.898], [40.881, -73.900], [40.873, -73.906]] }
-];
+  useEffect(() => {
+    map.zoomControl.remove();
+    const zoom = L.control.zoom({ position: "bottomright" });
 
-const sampleAlerts = [
-  { id: "alert1", coordinates: [40.885, -73.902], message: "Service delay" }
-];
+    zoom.addTo(map);
 
-export default function MapView({ stations = sampleStations, routes = sampleLines, alerts = sampleAlerts }) {
+    return () => {
+      zoom.remove();
+    };
+  }, []);
+
+  return null;
+}
+
+export default function MapView({ stations, routes, alerts }) {
   const [showStations, setShowStations] = useState(false);
   const [showRoutes, setShowRoutes] = useState(true);
   const [showAlerts, setShowAlerts] = useState(true);
@@ -62,13 +65,14 @@ export default function MapView({ stations = sampleStations, routes = sampleLine
     <div className="map-wrapper">
       <MapContainer
         center={[40.7128, -74.006]} // NYC center
-        zoom={11}
+        zoom={12}
         minZoom={11}
         maxZoom={18}
         maxBounds={nycBounds}
         maxBoundsViscosity={1.0}
         className="map"
-        style={{ height: "80vh", width: "100%" }}
+        style={{ height: "100vh", width: "100%" }}
+        attributionControl={false}
       >
         {/* <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -78,6 +82,8 @@ export default function MapView({ stations = sampleStations, routes = sampleLine
           url="https://cartodb-basemaps-a.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png"
           attribution='&copy; CartoDB'
         />
+
+        <MoveZoomControl />
 
         <PingMarker onClickLocation={setClickedPos} />
         {clickedPos && (
@@ -97,29 +103,29 @@ export default function MapView({ stations = sampleStations, routes = sampleLine
           />
         ))}
 
-        {showStations && stations.map(station => (
+        {showAlerts && alerts && alerts.map(alert => (
           <CircleMarker
-            center={[station.stop_lat, station.stop_lon]}
-            radius={2}
-            color="#000000"
-            fillColor="#000000"
-            fillOpacity={1}
             key={crypto.randomUUID()}
-          >
-            <StationMarker station={station} />
-          </CircleMarker>
-        ))}
-
-        {showAlerts && sampleAlerts.map(alert => (
-          <CircleMarker
-            key={alert.id}
             center={alert.coordinates}
             radius={6}
             color="#ff0000"
             fillColor="#ff0000"
             fillOpacity={1}
           >
-            <Popup>{alert.message}</Popup>
+            <Popup>{alert.desc}</Popup>
+          </CircleMarker>
+        ))}
+
+        {showStations && stations.map(station => (
+          <CircleMarker
+            center={[station.stop_lat, station.stop_lon]}
+            radius={2}
+            color="#555555"
+            fillColor="#2563eb"
+            fillOpacity={0.1}
+            key={crypto.randomUUID()}
+          >
+            <StationMarker station={station} />
           </CircleMarker>
         ))}
 
@@ -128,24 +134,17 @@ export default function MapView({ stations = sampleStations, routes = sampleLine
 
 
       {/* Toggle Controls */}
-      <div
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          zIndex: 1000,
-          background: "white",
-          padding: "10px",
-          borderRadius: "8px",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.3)"
-        }}
-      >
+      <div className="map-toggle-controls">
+        <h3>Map Controls</h3>
+        <hr />
+        <br />
         <div>
           <input
             type="checkbox"
             checked={showStations}
             onChange={toggleStations}
             id="stationsToggle"
+            className="styled-check"
           />
           <label htmlFor="stationsToggle" style={{ marginLeft: "6px" }}>Stations</label>
         </div>
@@ -156,6 +155,7 @@ export default function MapView({ stations = sampleStations, routes = sampleLine
             checked={showRoutes}
             onChange={toggleRoutes}
             id="linesToggle"
+            className="styled-check"
           />
           <label htmlFor="linesToggle" style={{ marginLeft: "6px" }}>Subway Lines</label>
         </div>
@@ -166,6 +166,7 @@ export default function MapView({ stations = sampleStations, routes = sampleLine
             checked={showAlerts}
             onChange={toggleAlerts}
             id="alertsToggle"
+            className="styled-check"
           />
           <label htmlFor="alertsToggle" style={{ marginLeft: "6px" }}>Alerts</label>
         </div>

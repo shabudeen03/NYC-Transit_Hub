@@ -3,39 +3,33 @@ import axios from "axios";
 import MapView from "./MapView";
 import "../App.css";
 
-export default function StationsMap() {
-  // const [stations, setStations] = useState([]);
-  // const [routes, setRoutes] = useState([]);
-  // const [shapes, setShapes] = useState([]);
+export default function StationsMap({ alerts }) {
   const [routeData, setRouteData] = useState({ stops: [], routes: [] });
-  // const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStations = async () => {
       try {
-        // const [stopsRes, routesRes, shapesRes] = await Promise.all([
+        //ease the burden on the backend!
+        //on average, faster loading times too!
+        const cached = localStorage.getItem("routeDataCache");
+
+        if(cached) {
+          const parsed = JSON.parse(cached);
+          const oneDay = 24 * 60 * 60 * 1000;
+          if(Date.now() - parsed.timestamp < oneDay) {
+            console.log("Loaded route data from cache");
+            setRouteData(parsed.data);
+            setLoading(false);
+            return;
+          }
+        }
+
+        console.log("Fetching route data from server");
         const [stopsRes, routesRes] = await Promise.all([
           axios.get("http://localhost:5000/api/train/static/stops"),
           axios.get("http://localhost:5000/api/train/static/routes"),
-          // axios.get("http://localhost:5000/api/train/static/shapes")
         ]);
-
-        //This should be done on backend
-        // for(let i=0; i<shapesRes.data.data.length; i++) {
-        //   let shape = shapesRes.data.data[i];
-
-        //   let routeId = shape.route_id;
-        //   for(const route of routesRes.data.data) {
-        //     if(route.route_id === routeId) {
-        //       shape.routeColor = route.route_color;
-        //       break;
-        //     }
-        //   }
-        // }
-
-        // console.log(shapesRes.data.data[0]);
-        // console.log(routesRes.data.data[0]);
 
         for(const route of routesRes.data.data) {
           if(route.coordinates === null) {
@@ -44,9 +38,21 @@ export default function StationsMap() {
           }
         }
 
+        //now save and set 
+        const freshData = {
+          stops: stopsRes.data.data,
+          routes: routesRes.data.data
+        };
 
-        // setRouteData({ stops: stopsRes.data.data, shapes: shapesRes.data.data, routes: routesRes.data.data });
-        setRouteData({ stops: stopsRes.data.data, routes: routesRes.data.data });
+        localStorage.setItem(
+          "routeDataCache",
+          JSON.stringify({
+            timestamp: Date.now(),
+            data: freshData
+          })
+        );
+
+        setRouteData(freshData);
       } catch (error) {
         console.error("Error fetching stations:", error);
       } finally {
@@ -60,5 +66,5 @@ export default function StationsMap() {
   if (loading) return <p>Loading stations...</p>;
 
   // return <MapView stations={routeData.stops} lines={routeData.shapes} routes={routeData.routes} />;
-  return <MapView stations={routeData.stops} routes={routeData.routes} />;
+  return <MapView stations={routeData.stops} routes={routeData.routes} alerts={alerts} />;
 }

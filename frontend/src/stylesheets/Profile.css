@@ -1,0 +1,82 @@
+/* Container */
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: system-ui, sans-serif;
+}
+
+/* Headings */
+.profile-title {
+  margin-bottom: 0.5rem;
+}
+
+.profile-info {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-divider {
+  margin: 2rem 0;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+/* Favorites section */
+.favorites-title {
+  margin-bottom: 1rem;
+}
+
+.favorites-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Each favorite station card */
+.favorite-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  min-width: 180px;
+  flex: 1 1 calc(33% - 1rem);
+  background-color: #fafafa;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Hover animation */
+.favorite-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Station name */
+.favorite-name {
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.05rem;
+}
+
+/* Remove button */
+.favorite-remove {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.favorite-remove:hover {
+  background-color: #c9302c;
+}
+
+/* Empty state */
+.no-favorites {
+  color: #777;
+  text-align: center;
+  margin-top: 1rem;
+}
